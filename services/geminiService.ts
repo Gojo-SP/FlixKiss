@@ -39,10 +39,6 @@ type TmdbExternalIdsResponse = {
   imdb_id: string | null;
 };
 
-type TmdbSeasonDetailResponse = {
-  episodes: any[]; // Keeping this simple
-};
-
 type TmdbActorDetailResponse = {
     id: number;
     name: string;
@@ -71,9 +67,21 @@ type TmdbDetailResponse = TmdbMovieResult & {
     external_ids?: { imdb_id: string | null };
 };
 
-
-const TMDB_BASE_URL = 'https://kisskh-asian.pages.dev/tmdb';
+const API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjMTI2ZmQ2YzU3NTE4ZTU2MjA4YWY2Y2U3OTI0MDJmZiIsIm5iZiI6MTc2NTcwNzI1MC4xNDksInN1YiI6IjY5M2U4ZGYyYTAxMTI1M2EyMjgzZTllZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.HcJYfnEkCz74vlO761q6Job8lfvyCN0i8mIt8awjseU';
+const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p';
+
+// Helper for authenticated requests
+const fetchWithAuth = async (url: string) => {
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${API_TOKEN}`
+    }
+  };
+  return fetch(url, options);
+};
 
 const endpoints: { key: string; title: string; url: string; type?: 'movie' | 'tv' }[] = [
   // Home Page
@@ -109,8 +117,8 @@ const fetchAndCacheGenres = async () => {
   const tvGenresUrl = `${TMDB_BASE_URL}/genre/tv/list?language=en-US`;
 
   const [movieGenresRes, tvGenresRes] = await Promise.all([
-    fetch(movieGenresUrl),
-    fetch(tvGenresUrl),
+    fetchWithAuth(movieGenresUrl),
+    fetchWithAuth(tvGenresUrl),
   ]);
 
   if (!movieGenresRes.ok || !tvGenresRes.ok) {
@@ -192,7 +200,7 @@ export const fetchMoviesData = async (view: 'home' | 'movies' | 'tv' | 'anime'):
         .replace(/__DATE_7_DAYS_AGO__/g, sevenDaysAgo)
         .replace(/__DATE_365_DAYS_AGO__/g, yearAgo)
         .replace(/__TODAY__/g, today);
-      return fetch(url);
+      return fetchWithAuth(url);
     }));
 
     responses.forEach((res, index) => {
@@ -252,7 +260,7 @@ export const fetchCategoryPageData = async (categoryKey: string, page: number): 
         .replace(/__TODAY__/g, today);
     }
 
-    const response = await fetch(url);
+    const response = await fetchWithAuth(url);
     if (!response.ok) throw new Error(`Failed to fetch page ${page} for ${categoryKey}`);
     const data = await response.json() as TmdbPagedResponse;
     
@@ -271,7 +279,7 @@ export const fetchCategoryPageData = async (categoryKey: string, page: number): 
 export const fetchLogoUrl = async (id: number, media_type: 'movie' | 'tv'): Promise<string | null> => {
   const url = `${TMDB_BASE_URL}/${media_type}/${id}/images`;
   try {
-    const response = await fetch(url);
+    const response = await fetchWithAuth(url);
     if (!response.ok) {
       console.warn(`Could not fetch images for ${media_type} ID ${id}`);
       return null;
@@ -298,7 +306,7 @@ export const searchContent = async (query: string, type: 'multi' | 'movie' | 'tv
   try {
     await fetchAndCacheGenres();
     const url = `${TMDB_BASE_URL}/search/${type}?query=${encodeURIComponent(query)}&include_adult=false&language=en-US&page=${page}`;
-    const response = await fetch(url);
+    const response = await fetchWithAuth(url);
     if (!response.ok) throw new Error('Search request failed');
     const data = await response.json() as TmdbPagedResponse;
     
@@ -347,7 +355,7 @@ export const fetchDiscoverResults = async (
         url += `&with_networks=${networkQuery}`;
       }
       
-      const response = await fetch(url);
+      const response = await fetchWithAuth(url);
       if (!response.ok) throw new Error('Discover request failed');
       const data = await response.json() as TmdbPagedResponse;
       
@@ -373,7 +381,7 @@ export const fetchDetailPageData = async (id: number, media_type: 'movie' | 'tv'
 
   const url = `${TMDB_BASE_URL}/${media_type}/${id}?language=en-US&append_to_response=${appendToResponse}`;
 
-  const response = await fetch(url);
+  const response = await fetchWithAuth(url);
   if (!response.ok) throw new Error(`Failed to fetch details for ${media_type} ID ${id}`);
   
   const data = await response.json() as TmdbDetailResponse;
@@ -453,7 +461,7 @@ export const fetchDetailPageData = async (id: number, media_type: 'movie' | 'tv'
 export const fetchGenreList = async (type: 'movie' | 'tv'): Promise<GenreItem[]> => {
   try {
     const url = `${TMDB_BASE_URL}/genre/${type}/list?language=en-US`;
-    const response = await fetch(url);
+    const response = await fetchWithAuth(url);
     if (!response.ok) throw new Error('Failed to fetch genre list');
     const data = await response.json() as TmdbGenreListResponse;
     return data.genres;
@@ -466,7 +474,7 @@ export const fetchGenreList = async (type: 'movie' | 'tv'): Promise<GenreItem[]>
 export const fetchCountriesList = async (): Promise<CountryItem[]> => {
   try {
     const url = `${TMDB_BASE_URL}/configuration/countries?language=en-US`;
-    const response = await fetch(url);
+    const response = await fetchWithAuth(url);
     if (!response.ok) throw new Error('Failed to fetch countries list');
     const data = await response.json() as CountryItem[];
     return data.sort((a: CountryItem, b: CountryItem) => a.english_name.localeCompare(b.english_name));
@@ -483,8 +491,8 @@ export const fetchActorCredits = async (actorId: number): Promise<{ actor: Actor
   const creditsUrl = `${TMDB_BASE_URL}/person/${actorId}/combined_credits?language=en-US`;
 
   const [detailsRes, creditsRes] = await Promise.all([
-    fetch(detailsUrl),
-    fetch(creditsUrl),
+    fetchWithAuth(detailsUrl),
+    fetchWithAuth(creditsUrl),
   ]);
 
   if (!detailsRes.ok) throw new Error(`Failed to fetch details for actor ID ${actorId}`);
@@ -517,7 +525,7 @@ export const fetchActorCredits = async (actorId: number): Promise<{ actor: Actor
 export const fetchExternalIds = async (id: number, media_type: 'movie' | 'tv'): Promise<{ imdb_id: string | null }> => {
     const url = `${TMDB_BASE_URL}/${media_type}/${id}/external_ids`;
     try {
-        const response = await fetch(url);
+        const response = await fetchWithAuth(url);
         if (!response.ok) {
             console.warn(`Could not fetch external IDs for ${media_type} ID ${id}`);
             return { imdb_id: null };
@@ -534,7 +542,7 @@ export const fetchKeywordIds = async (query: string): Promise<number[]> => {
     if (!query) return [];
     try {
         const url = `${TMDB_BASE_URL}/search/keyword?query=${encodeURIComponent(query)}`;
-        const response = await fetch(url);
+        const response = await fetchWithAuth(url);
         if (!response.ok) throw new Error('Keyword search failed');
         const data = await response.json() as TmdbKeywordSearchResponse;
         // Return only the first few relevant keyword IDs to keep the query focused
@@ -548,7 +556,7 @@ export const fetchKeywordIds = async (query: string): Promise<number[]> => {
 export const fetchSeasonEpisodes = async (tvId: number, seasonNumber: number): Promise<Episode[]> => {
     const url = `${TMDB_BASE_URL}/tv/${tvId}/season/${seasonNumber}?language=en-US`;
     try {
-        const response = await fetch(url);
+        const response = await fetchWithAuth(url);
         if (!response.ok) {
             throw new Error(`Could not fetch episodes for TV ID ${tvId}, Season ${seasonNumber}`);
         }
@@ -571,7 +579,7 @@ export const fetchSeasonEpisodes = async (tvId: number, seasonNumber: number): P
 export const fetchTVSeasons = async (tvId: number): Promise<Season[]> => {
     const url = `${TMDB_BASE_URL}/tv/${tvId}?language=en-US`;
     try {
-        const response = await fetch(url);
+        const response = await fetchWithAuth(url);
         if (!response.ok) {
             throw new Error(`Could not fetch seasons for TV ID ${tvId}`);
         }
