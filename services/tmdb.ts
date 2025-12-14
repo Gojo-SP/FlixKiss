@@ -1,7 +1,7 @@
 import { Movie, MovieDetail } from '../types';
 
 // Hardcoded Read Access Token to ensure successful authentication.
-const API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjYjQyYzVjMWE1MTY5ZjY1ODU2MDliNzg1N2M2OWFiOCIsIm5iZiI6MTczNDM0NTI0Ni4xNTgwMDAyLCJzdWIiOiI2NzYwMDIxZWE4ZDBlYjU2MGZhYTc3ZjIiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.KEG8knWObfgoMlwqi6lX-_-02bXL6qAfCcMPivutrpA';
+const API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjMTI2ZmQ2YzU3NTE4ZTU2MjA4YWY2Y2U3OTI0MDJmZiIsIm5iZiI6MTc2NTcwNzI1MC4xNDksInN1YiI6IjY5M2U4ZGYyYTAxMTI1M2EyMjgzZTllZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.HcJYfnEkCz74vlO761q6Job8lfvyCN0i8mIt8awjseU';
 const BASE_URL = 'https://api.themoviedb.org/3';
 
 const fetchFromTMDB = async <T>(endpoint: string, params: Record<string, string | number> = {}): Promise<T> => {

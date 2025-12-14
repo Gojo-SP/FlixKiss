@@ -1,14 +1,12 @@
 <div align="center">
-<img width="1200" alt="GHBanner" src="https://kisskh.cam/og-image.jpg" />
+<img width="1200" alt="GHBanner" src="https://flixkiss.com/og-image.jpg" />
 </div>
 
-# kisskh - A Modern Streaming App Interface
+# FlixKiss - A Modern Streaming App Interface
 
-kisskh is a sleek, feature-rich web application that emulates popular streaming services like Netflix. Built with React, TypeScript, and Tailwind CSS, it leverages the TMDB API to provide a dynamic and engaging user experience for browsing movies and TV shows.
+FlixKiss is a sleek, feature-rich web application that emulates popular streaming services like Netflix. Built with React, TypeScript, and Tailwind CSS, it leverages the TMDB API to provide a dynamic and engaging user experience for browsing movies and TV shows.
 
 This contains everything you need to run your app locally.
-
-View your app in AI Studio: https://ai.studio/apps/drive/1fbeM6xqy5OY7D4II3HFM7UArr14ebEX1
 
 ## Run Locally
 
@@ -29,7 +27,7 @@ View your app in AI Studio: https://ai.studio/apps/drive/1fbeM6xqy5OY7D4II3HFM7U
     # Optional: Social Media Links for the FAQ page
     VITE_FACEBOOK_URL="https://facebook.com/"
     VITE_TWITTER_URL="https://twitter.com/"
-    VITE_TELEGRAM_URL="https://t.me/kisskhcam"
+    VITE_TELEGRAM_URL="https://t.me/flixkiss"
     ```
 3.  Run the app:
     `npm run dev`
