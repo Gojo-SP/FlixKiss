@@ -85,7 +85,7 @@ const Navbar: React.FC<NavbarProps> = ({
       <header className={`fixed top-0 z-40 flex w-full items-center justify-between p-4 md:px-16 transition-colors duration-300 ${isScrolled ? 'bg-[#141414]/90 backdrop-blur-sm' : 'bg-transparent'}`}>
         <div className="flex items-center space-x-4 md:space-x-8">
           <a href="/" onClick={(e) => handleNavClick(e, '/')}>
-            <span className="text-3xl font-bold tracking-tighter text-[var(--brand-color)] cursor-pointer">FLIXKISS</span>
+            <span className="text-3xl font-montserrat-logo tracking-tight text-[var(--brand-color)] cursor-pointer">FLIXKISS</span>
           </a>
 
           <div className="hidden lg:flex items-center space-x-1">
