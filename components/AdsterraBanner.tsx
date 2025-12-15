@@ -8,14 +8,14 @@ const adHtml = `
     <body>
       <script type="text/javascript">
         atOptions = {
-          'key' : '1fdfdbb2ce472537351df2f832fb5705',
+          'key' : '9e189f9a0e9e3ab5e020d0f008940522',
           'format' : 'iframe',
           'height' : 250,
           'width' : 300,
           'params' : {}
         };
       </script>
-      <script type="text/javascript" src="//sparrowcanned.com/1fdfdbb2ce472537351df2f832fb5705/invoke.js"></script>
+      <script type="text/javascript" src="https://www.highperformanceformat.com/9e189f9a0e9e3ab5e020d0f008940522/invoke.js"></script>
     </body>
   </html>
 `.trim();
