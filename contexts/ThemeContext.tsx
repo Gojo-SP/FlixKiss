@@ -36,13 +36,13 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [theme, setThemeState] = useState<Theme>(() => {
     if (typeof window !== 'undefined') {
-      return (localStorage.getItem('flixkiss-theme') as Theme) || 'cyan';
+      return (localStorage.getItem('flixkiss-theme') as Theme) || 'red';
     }
-    return 'cyan';
+    return 'red';
   });
 
   useEffect(() => {
-    const currentTheme = localStorage.getItem('flixkiss-theme') as Theme || 'cyan';
+    const currentTheme = localStorage.getItem('flixkiss-theme') as Theme || 'red';
     updateFavicon(themeColors[currentTheme]);
   }, []);
 

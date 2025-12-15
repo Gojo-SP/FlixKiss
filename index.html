@@ -72,8 +72,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@1,900&display=swap" rel="stylesheet">
     <style>
       :root {
-        --brand-color: #00acc1;
-        --brand-color-dark: #0097a7;
+        --brand-color: #E50914;
+        --brand-color-dark: #c40812;
       }
       [data-theme="red"] {
         --brand-color: #E50914;
@@ -204,7 +204,7 @@
       // Immediately sets the theme on the <html> tag to prevent FOUC (Flash of Unstyled Content)
       (function() {
         try {
-          var theme = localStorage.getItem('flixkiss-theme') || 'cyan';
+          var theme = localStorage.getItem('flixkiss-theme') || 'red';
           document.documentElement.setAttribute('data-theme', theme);
         } catch (e) {
           console.error("Could not set theme from localStorage", e);
